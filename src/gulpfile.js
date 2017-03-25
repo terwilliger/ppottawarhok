@@ -2,8 +2,9 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 
 var rename = require('gulp-rename');
-var njk = require('gulp-render-nunjucks');
 
+
+var nunjucksRender = require('gulp-nunjucks-render');
 
 
 gulp.task('sass', function () {
@@ -30,7 +31,9 @@ gulp.task("layout", function () {
 
 
          gulp.src('layout/**/*')
-        .pipe(njk.render())
+        .pipe(nunjucksRender({
+            path: ['layout/']
+        }))
         .pipe(rename({ extname: '.html' }))
         .pipe(gulp.dest('../build'));
         
