@@ -1,83 +1,105 @@
 var $container = $("#container");
-var boxWidth = 50, boxHeight = 50;
-var gridWidth = 196/2, gridHeight = 150, gridRows = 2, gridColumns = 8, i, x, y;
+var $paletteArea = $("#paletteArea");
+var $answerArea = $("#answerArea");
+var maxAnswers = 6;
+var maxAnswerSlots = 3;
+var i, x, y;
 var currentQuestion = 0;
+var palette = [{image:"Cat", text:"Vagina"},
+{image:"Tongue", text:"Tongue"},
+{image:"Eggplant", text:"Penis"},
+{image:"Look", text:"Inspection"},
+{image:"InternalCondom", text:"Internal Condom"},
+{image:"Peach", text:"Anus"},
+{image:"Cucumber", text:"Bumps"},
+{image:"Needle", text:"Blood Test"},
+{image:"Kissing", text:"Kissing"},
+{image:"Discharge", text:"Discharge"},
+{image:"Hand", text:"Hand"},
+{image:"DentalDam", text:"Dental Dam"},
+{image:"PeeBottle", text:"Urine Test"},
+{image:"Burning", text:"Burning"},
+{image:"Abstinence", text:"Abstinence"},
+{image:"Medicine", text:"Medication"},
+{image:"Managed", text:"Managed Infection"},
+{image:"Swab", text:"Swab Test"},
+{image:"BodyFight", text:"Fight Infection"},
+{image:"ExternalCondom", text:"External Condom"},
+{image:"Lube", text:"Lube"},
+{image:"Spoon", text:"Spooning"},
+{image:"Communication", text:"Communication"},
+{image:"NoSymptoms", text:"No Symptoms"},
+{image:"Testing", text:"Testing"}];
 var questions = [
-	{question:"How can you get an infection?",
-	numAnswers:4,
-	objects:["eggplant", "cat", "peach", "tongue", "hand"],
-	answers:["41","12","23","34"]},
-	{question:"Test question?",
+	{question:"How can you get a sexually transmitted infection?",
+	numAnswers:6,
+	answers:[["41","41"],["41","41"],["41","41"],["12","41"],["23","41"],["34","41"]]},
+	{question:"How do you get tested for sexually transmitted infections?",
 	numAnswers:3,
-	objects:["cat", "tongue", "eggplant", "hand"],
-	answers:["41","12","23"]},
-	{question:"Test question 2?",
-	numAnswers:2,
-	objects:["hand", "talk", "spoon", "kiss", "cat"],
-	answers:["31","12","23","53","13"]},
+	answers:[["41"],["12"],["23"]]},
+	{question:"What if you have a sexually transmitted infection?",
+	numAnswers:3,
+	answers:[["53"],["53"],["13"]]},
+	{question:"What are the most common symptoms of HPV?",
+	numAnswers:3,
+	answers:[["53"],["13"],["13"]]},
+	{question:"What are the most common symptoms of herpes?",
+	numAnswers:3,
+	answers:[["31"],["12"],["23"]]},
+	{question:"What are the most common symptoms of chlamydia and gonorrhea?",
+	numAnswers:3,
+	answers:[["23"],["53"],["13"]]},
+	{question:"How can you reduce the risk of contracting an STI?",
+	numAnswers:3,
+	answers:[["23"],["53"],["13"]]},
 ]
 
-function imgClicked(i) {
-	console.log(i);
-}
-
 function setup() {
-	var objects =["cat", "cat", "cat", "cat", "cat", "cat", "cat", "cat"];
-	//loop through and create the grid (a div for each cell). Feel free to tweak the variables above
-	for (i = 0; i < gridColumns; i++) {
-		x = (i * gridWidth) % (gridColumns * gridWidth) + ((gridWidth - boxWidth) / 2);
-		y = Math.floor(i / gridColumns) * gridHeight + ((gridHeight - boxHeight) / 2);
-		$("<img/>").attr("id","i"+i).attr("src", "img/"+objects[i]+".png")
-			.css({position:"absolute", top:y, left:x, width:50, height:50})
-			//.click(function(x){imgClicked(x)}.bind(this, i))
-			.prependTo($container);
+	var i, j, x = 0, y = 0;
+	//$(".paletteItem").remove();
+	for (i = 0; i < palette.length; i++) {
+		$("<img/>").attr("id","p"+i).attr("class","paletteItem").attr("src", "img/"+palette[i].image+".svg").attr("alt", palette[i].text)
+			.appendTo($paletteArea);
 	}
-	for (i = 0; i < gridRows * gridColumns; i++) {
-		x = (i * gridWidth) % (gridColumns * gridWidth) + ((gridWidth - boxWidth) / 2);
-		y = Math.floor(i / gridColumns) * gridHeight + ((gridHeight - boxHeight) / 2);
-		if (i < gridColumns)
-			$("<div/>").attr("id","a"+(i)).css({position:"absolute", border:"3px solid #454545", width:boxWidth-1, height:boxHeight-1, top:y, left:x}).prependTo($container);
-		else
-			$("<div/>").attr("id","q"+(i-gridColumns)).css({position:"absolute", border:"3px solid #454545", width:boxWidth-1, height:boxHeight-1, top:y, left:x}).prependTo($container);
+	for (i = 0; i < palette.length; i++) {
+		x = $("#p"+i).position().left;
+		y = $("#p"+i).position().top;
+		$("<img/>").attr("class","box paletteItem").attr("src", "img/"+palette[i].image+".svg")
+			.css({position:"absolute", left:x, top:y})
+			.appendTo($paletteArea);
 	}
 
-	//set the container's size to match the grid, and ensure that the box widths/heights reflect the variables above
-	TweenLite.set($container, {height: gridRows * gridHeight + 1, width: gridColumns * gridWidth + 1});
-	TweenLite.set(".box", {width:50, height:50});
+	for (i = 0; i < maxAnswers; i++) {
+		$("<div/>").attr("id","a"+i).attr("class","answerBox").appendTo($answerArea);
+		for (j = 0; j < maxAnswerSlots; j++) {
+			$("<div/>").attr("id","as"+i+j).attr("class","answerSlot").appendTo($("#a"+i));
+		}
+		$("<div/>").attr("id","as"+i+j).attr("class","answerIndicator").appendTo($("#a"+i));
+	}
+
+	//TweenLite.set($container, {height: 800, width: 600});
+	//TweenLite.set(".box", {width:50, height:50});
 	startQuestion(0);
 }
 
 function startQuestion(index) {
 	var x, y;
 	var question = questions[index];
-	var numObjects = questions[index].objects.length;
-	//console.log(question);
-	$(".box").remove();
+	//$(".box").remove();
 	$(".question").text(question.question);
 	// Set answer boxes
-	for (var i = 0; i < gridColumns; i++) {
-		x = (i * gridWidth) % (gridColumns * gridWidth) + ((gridWidth - boxWidth) / 2);
-		x += (gridColumns - question.numAnswers) * gridWidth / 2;
-		y = ((gridHeight - boxHeight) / 2);
-		if (i < question.numAnswers)
-			$("#a" + i).show().css({left:x, top:y});
+	for (var i = 0; i < maxAnswers; i++) {
+		if (i < question.numAnswers) {
+			$("#a" + i).show();
+			for (j = 0; j < maxAnswerSlots; j++) {
+				if (j < question.answers[i].length)
+					$("#as"+i+j).show();
+				else
+					$("#as"+i+j).hide();
+			}
+		}
 		else
 			$("#a" + i).hide();
-
-		x = (i * gridWidth) % (gridColumns * gridWidth) + ((gridWidth - boxWidth) / 2);
-		x += (gridColumns - numObjects) * gridWidth / 2;
-		y = gridHeight + ((gridHeight - boxHeight) / 2);
-		if (i < numObjects) {
-			$("#q" + i).show().css({left:x, top:y});
-			$("#i" + i).show().css({left:x, top:y}).attr("src", "img/"+question.objects[i]+".png").css({left:x, top:y});
-			$("<img/>").attr("class","box").attr("src", "img/"+question.objects[i]+".png")
-				.css({position:"absolute", top:y, left:x, width:50, height:50})
-				.appendTo($container);
-		}
-		else {
-			$("#q" + i).hide();
-			$("#i" + i).hide();
-		}
 	}
 	update();
 }
@@ -93,10 +115,10 @@ function update() {
 		liveSnap:liveSnap,
 		snap:{
 			x: function(endValue) {
-				return (snap || liveSnap) ? Math.round(endValue / gridWidth) * gridWidth : endValue;
+				return endValue;//(snap || liveSnap) ? Math.round(endValue / gridWidth) * gridWidth : endValue;
 			},
 			y: function(endValue) {
-				return (snap || liveSnap) ? Math.round(endValue / gridHeight) * gridHeight : endValue;
+				return endValue;//(snap || liveSnap) ? Math.round(endValue / gridHeight) * gridHeight : endValue;
 			}
 		}
 	});

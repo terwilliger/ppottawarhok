@@ -4,10 +4,14 @@
 {% block content %}
 
 <div id="game">
-	<div class="question"></div>
 	<div id="container">
+		<div id="paletteArea">
+			<span class="bright">Small text describing STI transmission briefly.</span><br/><br/>
+			<span class="dark">Click and drag the emoji to the answer areas.</span><br/><br/>
+		</div>
+		<div id="answerArea"><div class="question"></div></div>
 	</div>
-	<center><button onclick="nextQuestion()">Next question</button></center><!-- debug/test -->
+	<center><button onclick="nextQuestion()">Next question</button></center>
 </div>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/plugins/CSSPlugin.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenLite.min.js"></script>
