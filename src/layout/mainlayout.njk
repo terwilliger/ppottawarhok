@@ -4,13 +4,14 @@
     	<meta charset=utf-8 />
     	<title>{{ title }}</title>
     	<link rel="stylesheet" type="text/css" media="screen" href="css/styles.css" />
-    	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    	<script type="text/javascript" src="js/script.js" ></script>
     
     </head>
     <body>
-    
+    <div class="wrap">
     {% block content %}
-{% endblock %}
+    {% endblock %}
+    </div>
+    	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    	<script type="text/javascript" src="js/script.js" ></script>
      </body>
     </html>
