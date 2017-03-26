@@ -33,9 +33,9 @@ var palette = [{image:"Cat", text:"Vagina"},
 {image:"NoSymptoms", text:"No Symptoms"},
 {image:"Testing", text:"Testing"}];
 var questions = [
-/*	{question:"How can you get a sexually transmitted infection?",
+	{question:"How can you get a sexually transmitted infection?",
 	numAnswers:6,
-	answers:[["Tongue","Eggplant"],["Tongue","Cat"],["Tongue","Peach"],["Eggplant","Cat"],["Cat","Cat"],["Eggplant","Peach"]]},*/
+	answers:[["Tongue","Eggplant"],["Tongue","Cat"],["Tongue","Peach"],["Eggplant","Cat"],["Cat","Cat"],["Eggplant","Peach"]]},
 	{question:"How do you get tested for sexually transmitted infections?",
 	numAnswers:3,
 	answers:[["PeeBottle"],["Swab"],["Look"]]},
@@ -114,34 +114,81 @@ function startQuestion(index) {
 }
 
 function checkAnswers() {
+	var i, j, k;
 	var question = questions[currentQuestion];
-	for (var i = 0; i < question.numAnswers; i++) {
-		var blank = true, right = false;
+	var rightAnswers = Array();
+	var myAnswers = Array();
+
+	// Remove dragging and reposition
+	for (i = 0; i < question.numAnswers; i++) {
 		for (j = 0; j < question.answers[i].length; j++) {
 			var item = $("#as"+i+j);
 			if (item.children().length > 0) {
 				item.children().first().removeClass("box");
-				if (Draggable.get(item.children().first()) != null) {
+				if (Draggable.get(item.children().first()) != null)
 					Draggable.get(item.children().first()).kill();
-				}
 				item.children().first().css({left:item.position().left+10, top:item.position().top+10});
-				blank = false;
-				for (var k = 0; k < question.numAnswers; k++) {
-					if (question.answers[k].indexOf(item.children().first().attr('id')) > -1) {
+			}
+		}
+	}
+
+	// Create answer arrays
+	for (i = 0; i < question.numAnswers; i++) {
+		var answers = Array();
+		rightAnswers.push(question.answers[i].slice().sort());
+		for (j = 0; j < question.answers[i].length; j++) {
+			var item = $("#as"+i+j);
+			if (item.children().length > 0) {
+				answers.push(item.children().first().attr('id'));
+			}
+		}
+		myAnswers.push(answers.sort());
+	}
+
+	// Check answers
+	for (i = 0; i < question.numAnswers; i++) {
+		var blank = false, right = false, dupe = false;
+		for (j = 0; j < question.answers[i].length; j++) {
+			if ($("#as"+i+j).children().length == 0) {
+				blank = true;
+			}
+		}
+		if (blank == false) {
+			for (j = 0; j < question.numAnswers; j++) {
+				if (myAnswers[i].length == rightAnswers[j].length) {
+					var correct = true;
+					for (k = 0; k < myAnswers[i].length; k++) {
+						if (myAnswers[i][k] != rightAnswers[j][k]) {
+							correct = false;
+						}
+					}
+					if (correct == true)
 						right = true;
+				}
+			}
+			if (right == true) {
+				for (j = 0; j < i; j++) {
+					if (myAnswers[i].length == myAnswers[j].length) {
+						var same = true;
+						for (k = 0; k < myAnswers[i].length; k++) {
+							if (myAnswers[i][k] != myAnswers[j][k]) {
+								same = false;
+							}
+						}
+						if (same == true)
+							dupe = true;
 					}
 				}
 			}
 		}
-		if (blank == true) {
+		if (blank == true)
 			$("#ai"+i).css({"content":"url('img/Blank.svg')"});
-		}
-		else {
-			if (right == true)
-				$("#ai"+i).css({"content":"url('img/Right.svg')"});
-			else
-				$("#ai"+i).css({"content":"url('img/Wrong.svg')"});
-		}
+		else if (dupe == true)
+			$("#ai"+i).css({"content":"url('img/Dupe.svg')"});
+		else if (right == true)
+			$("#ai"+i).css({"content":"url('img/Right.svg')"});
+		else
+			$("#ai"+i).css({"content":"url('img/Wrong.svg')"});
 	}
 }
 
