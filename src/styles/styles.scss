@@ -58,6 +58,13 @@ font-family: Roboto, sans-serif;
 	height: 20px;
 	content:url('../img/Blank.svg');
 }
+.nonDraggableImage {
+	user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+}
 
 .bright { color:#448cc9; }
 .dark { color:#c4c8c5; }

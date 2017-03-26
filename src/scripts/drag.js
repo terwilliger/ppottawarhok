@@ -7,13 +7,13 @@ var i, x, y;
 var currentQuestion = 0;
 var currentItem = -1;
 var currentSlot = "";
-var palette = [{image:"Cat", text:"Vagina"},
-{image:"Tongue", text:"Tongue"},
+var palette = [{image:"Cat", text:"Vulva"},
+{image:"Tongue", text:"Mouth"},
 {image:"Eggplant", text:"Penis"},
 {image:"Look", text:"Inspection"},
 {image:"InternalCondom", text:"Internal Condom"},
 {image:"Peach", text:"Anus"},
-{image:"Cucumber", text:"Bumps"},
+{image:"Bumps", text:"Bumps"},
 {image:"Needle", text:"Blood Test"},
 {image:"Kissing", text:"Kissing"},
 {image:"Discharge", text:"Discharge"},
@@ -37,17 +37,17 @@ var questions = [
 	numAnswers:6,
 	answers:[["Tongue","Eggplant"],["Tongue","Cat"],["Tongue","Peach"],["Eggplant","Cat"],["Cat","Cat"],["Eggplant","Peach"]]},
 	{question:"How do you get tested for sexually transmitted infections?",
-	numAnswers:3,
-	answers:[["PeeBottle"],["Swab"],["Look"]]},
+	numAnswers:4,
+	answers:[["PeeBottle"],["Swab"],["Look"],["Needle"]]},
 	{question:"What if you have a sexually transmitted infection?",
 	numAnswers:3,
 	answers:[["Managed"],["BodyFight"],["Medicine"]]},
 	{question:"What are the most common symptoms of HPV?",
 	numAnswers:3,
-	answers:[["NoSymptoms"],["Cucumber"],["Testing"]]},
+	answers:[["NoSymptoms"],["Bumps"],["Testing"]]},
 	{question:"What are the most common symptoms of herpes?",
 	numAnswers:3,
-	answers:[["NoSymptoms"],["Cucumber"],["Burning"]]},
+	answers:[["NoSymptoms"],["Bumps"],["Burning"]]},
 	{question:"What are the most common symptoms of chlamydia and gonorrhea?",
 	numAnswers:3,
 	answers:[["NoSymptoms"],["Discharge"],["Burning"]]},
@@ -60,7 +60,7 @@ function setup() {
 	var i, j, x = 0, y = 0;
 	//$(".paletteItem").remove();
 	for (i = 0; i < palette.length; i++) {
-		$("<img/>").attr("id","p"+i).attr("class","paletteItem").attr("src", "img/"+palette[i].image+".svg").attr("alt", palette[i].text)
+		$("<img/>").attr("id","p"+i).attr("class","paletteItem nonDraggableImage").attr("src", "img/"+palette[i].image+".svg").attr("alt", palette[i].text)
 			.attr("title", palette[i].text)
 			.appendTo($paletteArea);
 	}
@@ -125,6 +125,7 @@ function checkAnswers() {
 			var item = $("#as"+i+j);
 			if (item.children().length > 0) {
 				item.children().first().removeClass("box");
+				item.children().first().addClass("nonDraggableImage");
 				if (Draggable.get(item.children().first()) != null)
 					Draggable.get(item.children().first()).kill();
 				item.children().first().css({left:item.position().left+10, top:item.position().top+10});
@@ -168,7 +169,8 @@ function checkAnswers() {
 			}
 			if (right == true) {
 				for (j = 0; j < i; j++) {
-					if (myAnswers[i].length == myAnswers[j].length) {
+					if ((myAnswers[i].length == myAnswers[j].length) &&
+						(myAnswers[i].length == question.answers[j].length)) {
 						var same = true;
 						for (k = 0; k < myAnswers[i].length; k++) {
 							if (myAnswers[i][k] != myAnswers[j][k]) {
