@@ -67,7 +67,7 @@ function setup() {
 	for (i = 0; i < palette.length; i++) {
 		x = $("#p"+i).position().left;
 		y = $("#p"+i).position().top;
-		$("<img/>").attr("class","box paletteItem").attr("id",palette[i].image).attr("src", "img/"+palette[i].image+".svg")
+		$("<img/>").attr("class","box paletteItem m"+i).attr("id",palette[i].image).attr("src", "img/"+palette[i].image+".svg")
 			.attr("title", palette[i].text)
 			.css({position:"absolute", left:x, top:y})
 			.appendTo($paletteArea);
@@ -124,6 +124,8 @@ function checkAnswers() {
 		for (j = 0; j < question.answers[i].length; j++) {
 			var item = $("#as"+i+j);
 			if (item.children().length > 0) {
+				for (k = 0; k < palette.length; k++)
+					item.children().first().removeClass("m"+k);
 				item.children().first().removeClass("box");
 				item.children().first().addClass("nonDraggableImage");
 				if (Draggable.get(item.children().first()) != null)
@@ -234,7 +236,7 @@ function update() {
 					if (palette[i].image == this.target.id) {
 						x = $("#p"+i).position().left;
 						y = $("#p"+i).position().top;
-						$("<img/>").attr("class","box paletteItem").attr("id",palette[i].image).attr("src", "img/"+palette[i].image+".svg")
+						$("<img/>").attr("class","box paletteItem m"+i).attr("id",palette[i].image).attr("src", "img/"+palette[i].image+".svg")
 							.attr("title", palette[i].text)
 							.css({position:"absolute", left:x, top:y})
 							.appendTo($paletteArea);
@@ -252,6 +254,23 @@ function nextQuestion() {
 		currentQuestion = 0;
 	startQuestion(currentQuestion);
 }
+
+$(window).resize(function() {
+	for (var i = 0; i < maxAnswers; i++) {
+		for (j = 0; j < maxAnswerSlots; j++) {
+			if ($("#as"+i+j).children().length > 0) {
+				var slot = $("#as"+i+j);
+				var item = $("#as"+i+j).children().first();
+				item.css({position:"absolute", left:slot.position().left+10, top:slot.position().top+10});
+			}
+		}
+	}
+	for (i = 0; i < palette.length; i++) {
+		var sitem = $("#p"+i);
+		var mitem = $(".m"+i);
+		mitem.css({position:"absolute", left:sitem.position().left, top:sitem.position().top});
+	}
+});
 
 setup();
 update();
