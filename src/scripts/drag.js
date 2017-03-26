@@ -136,7 +136,6 @@ function checkAnswers() {
 	// Create answer arrays
 	for (i = 0; i < question.numAnswers; i++) {
 		var answers = Array();
-		rightAnswers.push(question.answers[i].slice().sort());
 		for (j = 0; j < question.answers[i].length; j++) {
 			var item = $("#as"+i+j);
 			if (item.children().length > 0) {
@@ -144,6 +143,9 @@ function checkAnswers() {
 			}
 		}
 		myAnswers.push(answers.sort());
+	}
+	for (i = 0; i < question.answers.length; i++) {
+		rightAnswers.push(question.answers[i].slice().sort());
 	}
 
 	// Check answers
@@ -155,7 +157,7 @@ function checkAnswers() {
 			}
 		}
 		if (blank == false) {
-			for (j = 0; j < question.numAnswers; j++) {
+			for (j = 0; j < question.answers.length; j++) {
 				if (myAnswers[i].length == rightAnswers[j].length) {
 					var correct = true;
 					for (k = 0; k < myAnswers[i].length; k++) {
