@@ -61,12 +61,14 @@ function setup() {
 	//$(".paletteItem").remove();
 	for (i = 0; i < palette.length; i++) {
 		$("<img/>").attr("id","p"+i).attr("class","paletteItem").attr("src", "img/"+palette[i].image+".svg").attr("alt", palette[i].text)
+			.attr("title", palette[i].text)
 			.appendTo($paletteArea);
 	}
 	for (i = 0; i < palette.length; i++) {
 		x = $("#p"+i).position().left;
 		y = $("#p"+i).position().top;
 		$("<img/>").attr("class","box paletteItem").attr("id",palette[i].image).attr("src", "img/"+palette[i].image+".svg")
+			.attr("title", palette[i].text)
 			.css({position:"absolute", left:x, top:y})
 			.appendTo($paletteArea);
 	}
@@ -182,6 +184,7 @@ function update() {
 						x = $("#p"+i).position().left;
 						y = $("#p"+i).position().top;
 						$("<img/>").attr("class","box paletteItem").attr("id",palette[i].image).attr("src", "img/"+palette[i].image+".svg")
+							.attr("title", palette[i].text)
 							.css({position:"absolute", left:x, top:y})
 							.appendTo($paletteArea);
 						update();
